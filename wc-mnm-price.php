@@ -19,11 +19,11 @@
 
 
 /**
- * The Main WC_MNM_Weight class
+ * The Main WC_MNM_Price class
  **/
-if ( ! class_exists( 'WC_MNM_Weight' ) ) :
+if ( ! class_exists( 'WC_MNM_Price' ) ) :
 
-class WC_MNM_Weight {
+class WC_MNM_Price {
 
 	/**
 	 * constants
@@ -32,10 +32,10 @@ class WC_MNM_Weight {
 	CONST REQUIRED_WOO = '4.0.0';
 
 	/**
-	 * WC_MNM_Weight Constructor
+	 * WC_MNM_Price Constructor
 	 *
 	 * @access 	public
-     * @return 	WC_MNM_Weight
+     * @return 	WC_MNM_Price
 	 */
 	public static function init() {
 
@@ -44,6 +44,7 @@ class WC_MNM_Weight {
 
 		// Add extra meta.
 		add_action( 'woocommerce_mnm_product_options', array( __CLASS__, 'container_options') , 10, 2 );
+		add_filter( 'wc_mnm_validation_options', array( __CLASS__, 'validation_options' ) );
 		add_action( 'woocommerce_admin_process_product_object', array( __CLASS__, 'process_meta' ), 20 );
 
 		// Register Scripts.
@@ -64,6 +65,9 @@ class WC_MNM_Weight {
 		// Bypass min/max sizes when in price validation mode.
 		add_filter( 'woocommerce_mnm_min_container_size', array( __CLASS__, 'remove_min_size' ), 10, 2 );
 		add_filter( 'woocommerce_mnm_max_container_size', array( __CLASS__, 'remove_max_size' ), 10, 2 );
+
+		// Share a validation mode input with Weight validation plugin.
+		add_filter( 'wc_mnm_admin_show_validation_mode_option', '__return_false' );
 
     }
 
@@ -94,17 +98,18 @@ class WC_MNM_Weight {
 	 * @param  WC_Product_Mix_and_Match  $mnm_product_object
 	 */
 	public static function container_options( $post_id, $mnm_product_object ) {
+		
+		$allowed_options = self::get_validation_options();
+		$value = $mnm_product_object->get_meta( '_mnm_validation_mode' );
+		$value = in_array( $value, $allowed_options ) ? $value : '';
 
 		woocommerce_wp_radio( 
 			array(
 				'id'      => '_mnm_validation_mode',
 				'class'   => 'select short mnm_validation_mode',
 				'label'   => __( 'Validation mode', 'wc-mnm-price', 'wc-mnm-weight' ),
-				'value'	  => $mnm_product_object->get_meta( '_mnm_validation_mode' ) === 'price' ? 'price' : '',
-				'options' => array( 
-					''       => __( 'Use default', 'wc-mnm-price', 'wc-mnm-weight' ),
-					'price' => __( 'Validate by price', 'wc-mnm-price', 'wc-mnm-weight' )
-				)
+				'value'	  => $value,
+				'options' => $allowed_options,
 			)
 		);
 
@@ -149,14 +154,20 @@ class WC_MNM_Weight {
 
 
 				$( "#mnm_product_data input.mnm_validation_mode" ).change( function() {
-					if( $( this ).val() === 'price' ) {
-						$( "#mnm_product_data .mnm_container_size_options" ).hide();
-						$( "#mnm_product_data .show_if_validate_by_price" ).show();
-					} else {
+
+					var value = $( this ).val();
+
+					if( '' === value ) {
 						$( "#mnm_product_data .mnm_container_size_options" ).show();
 						$( "#mnm_product_data .show_if_validate_by_price" ).hide();
+					} else {
+						$( "#mnm_product_data .mnm_container_size_options" ).hide();
+						if( 'price' === value ) {
+							$( "#mnm_product_data .show_if_validate_by_price" ).show();
+						} else {
+							$( "#mnm_product_data .show_if_validate_by_price" ).hide();
+						}
 					}
-
 				} );
 
 				$( "#mnm_product_data input.mnm_validation_mode:checked" ).change();
@@ -170,6 +181,18 @@ class WC_MNM_Weight {
 	}
 
 	/**
+	 * Add the options via filter, so we can work with other validation mini-extensions.
+	 *
+	 * @param  array $options Validation options
+	 * @return array
+	 */
+	public static function validation_options( $options ) {
+		$options[ '' ]       = esc_html__( 'Use default', 'wc-mnm-price' );
+		$options[ 'price' ] = esc_html__( 'Validate by price', 'wc-mnm-price' );
+		return $options;
+	}
+
+	/**
 	 * Saves the new meta field.
 	 *
 	 * @param  WC_Product_Mix_and_Match  $mnm_product_object
@@ -178,8 +201,10 @@ class WC_MNM_Weight {
 
 		if ( $product->is_type( 'mix-and-match' ) ) {
 
-			if( ! empty( $_POST[ '_mnm_validation_mode' ] ) && 'price' === $_POST[ '_mnm_validation_mode' ] ) {
-				$product->update_meta_data( '_mnm_validation_mode', 'price' );
+			$allowed_options = self::get_validation_options();
+
+			if( ! empty( $_POST[ '_mnm_validation_mode' ] ) && in_array( 'weight', $allowed_options ) ) {
+				$product->update_meta_data( '_mnm_validation_mode', wc_clean( $_POST[ '_mnm_validation_mode' ] ) );
 			} else {
 				$product->delete_meta_data( '_mnm_validation_mode' );
 			}
@@ -359,10 +384,19 @@ class WC_MNM_Weight {
 		return $product && $product->is_type( 'mix-and-match' ) && $product->is_priced_per_product() && 'price' === $product->get_meta( '_mnm_validation_mode', true );
 	}
 
+	/**
+	 * Get allowed validation options
+	 *
+	 * @return array
+	 */
+	public static function get_validation_options() {
+		return array_unique( (array) apply_filters( 'wc_mnm_validation_options', array() ) );
+	}
+
 
 } //end class: do not remove or there will be no more guacamole for you
 
 endif; // end class_exists check
 
 // Launch the whole plugin.
-add_action( 'woocommerce_mnm_loaded', array( 'WC_MNM_Weight', 'init' ) );
+add_action( 'woocommerce_mnm_loaded', array( 'WC_MNM_Price', 'init' ) );
