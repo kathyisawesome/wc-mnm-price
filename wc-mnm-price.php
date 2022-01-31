@@ -104,7 +104,7 @@ class WC_MNM_Price {
 		
 		$allowed_options = self::get_validation_options();
 		$value = $mnm_product_object->get_meta( '_mnm_validation_mode' );
-		$value = in_array( $value, $allowed_options ) ? $value : '';
+		$value = array_key_exists( $value, $allowed_options ) ? $value : '';
 
 		woocommerce_wp_radio( 
 			array(
@@ -206,7 +206,7 @@ class WC_MNM_Price {
 
 			$allowed_options = self::get_validation_options();
 
-			if( ! empty( $_POST[ '_mnm_validation_mode' ] ) && in_array( 'weight', $allowed_options ) ) {
+			if( ! empty( $_POST[ '_mnm_validation_mode' ] ) && array_key_exists( $_POST[ '_mnm_validation_mode' ], $allowed_options ) ) {
 				$product->update_meta_data( '_mnm_validation_mode', wc_clean( $_POST[ '_mnm_validation_mode' ] ) );
 			} else {
 				$product->delete_meta_data( '_mnm_validation_mode' );
