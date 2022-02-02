@@ -111,7 +111,7 @@ class WC_MNM_Price {
 			array(
 				'id'      => '_mnm_validation_mode',
 				'class'   => 'select short mnm_validation_mode',
-				'label'   => __( 'Validation mode', 'wc-mnm-price', 'wc-mnm-weight' ),
+				'label'   => __( 'Validation mode', 'wc-mnm-price' ),
 				'value'	  => $value,
 				'options' => $allowed_options,
 			)
@@ -119,9 +119,9 @@ class WC_MNM_Price {
 
 		woocommerce_wp_text_input( array(
 			'id'            => '_mnm_min_container_price',
-			'label'       => __( 'Min Container Price', 'wc-mnm-price', 'wc-mnm-weight' ) . ' (' . get_woocommerce_currency_symbol() . ')',
+			'label'       => __( 'Min Container Price', 'wc-mnm-price' ) . ' (' . get_woocommerce_currency_symbol() . ')',
 			'desc_tip'    => true,
-			'description' => __( 'Min price of containers in decimal form', 'wc-mnm-price', 'wc-mnm-weight' ),
+			'description' => __( 'Min price of containers in decimal form', 'wc-mnm-price' ),
 			'type'        => 'text',
 			'data_type'   => 'decimal',
 			'value'			=> $mnm_product_object->get_meta( '_mnm_min_container_price', true, 'edit' ),
@@ -131,9 +131,9 @@ class WC_MNM_Price {
 
 		woocommerce_wp_text_input( array(
 			'id'            => '_mnm_max_container_price',
-			'label'       => __( 'Max Container Price', 'wc-mnm-price', 'wc-mnm-weight' ) . ' (' . get_woocommerce_currency_symbol() . ')',
+			'label'       => __( 'Max Container Price', 'wc-mnm-price' ) . ' (' . get_woocommerce_currency_symbol() . ')',
 			'desc_tip'    => true,
-			'description' => __( 'Maximum price of containers in decimal form', 'wc-mnm-price', 'wc-mnm-weight' ),
+			'description' => __( 'Maximum price of containers in decimal form', 'wc-mnm-price' ),
 			'type'        => 'text',
 			'data_type'   => 'decimal',
 			'value'			=> $mnm_product_object->get_meta( '_mnm_max_container_price', true, 'edit' ),
@@ -276,11 +276,11 @@ class WC_MNM_Price {
 
 			// Validate the total price.
 			if ( $total_price < $product->get_meta( '_mnm_min_container_price' ) ) {
-				$error_message = sprintf( __( 'Your &quot;%s&quot; is too inexpensive.', 'wc-mnm-min-price', 'wc-mnm-weight' ), $product->get_title() );
+				$error_message = sprintf( __( 'Your &quot;%s&quot; is too inexpensive.', 'wc-mnm-price' ), $product->get_title() );
 				wc_add_notice( $error_message, 'error' );
 				$valid = false;
 			} elseif ( $total_price > $product->get_meta( '_mnm_max_container_price' ) ) {
-				$error_message = sprintf( __( 'Your &quot;%s&quot; is too expensive.', 'wc-mnm-max-price', 'wc-mnm-weight' ), $product->get_title() );
+				$error_message = sprintf( __( 'Your &quot;%s&quot; is too expensive.', 'wc-mnm-price' ), $product->get_title() );
 				wc_add_notice( $error_message, 'error' );
 				$valid = false;
 			}
@@ -309,19 +309,19 @@ class WC_MNM_Price {
 
 		$params = array(
 			// translators: %s is current selected price
-			'i18n_price_message'                   => __( 'You have selected %s worth of product. ', 'wc-mnm-price', 'wc-mnm-weight' ),
+			'i18n_price_message'                   => __( 'You have selected %s worth of product. ', 'wc-mnm-price' ),
 
 			// translators: %v is the error message. %s is price left to be selected.
-			'i18n_price_error'                     => __( '%vPlease select %s to continue&hellip;', 'wc-mnm-price', 'wc-mnm-weight' ),
+			'i18n_price_error'                     => __( '%vPlease select %s to continue&hellip;', 'wc-mnm-price' ),
 
 			// translators: %v is the error message. %min is the script placeholder for formatted min price. %max is script placeholder for formatted max price.
-			'i18n_min_max_price_error'             => __( '%vPlease choose between %min and %max to continue&hellip;', 'wc-mnm-price', 'wc-mnm-weight' ),
+			'i18n_min_max_price_error'             => __( '%vPlease choose between %min and %max to continue&hellip;', 'wc-mnm-price' ),
 			
 			// translators: %v is the error message. %min is the script placeholder for formatted min price. %max is script placeholder for formatted max price.
-			'i18n_min_price_error'                 => __( '%vPlease choose at least %min to continue&hellip;', 'wc-mnm-price', 'wc-mnm-weight' ),
+			'i18n_min_price_error'                 => __( '%vPlease choose at least %min to continue&hellip;', 'wc-mnm-price' ),
 			
 			// translators: %v is the error message. %min is the script placeholder for formatted min price. %max is script placeholder for formatted max price.
-			'i18n_max_price_error'                 => __( '%vPlease choose fewer than %max to continue&hellip;', 'wc-mnm-price', 'wc-mnm-weight' ),
+			'i18n_max_price_error'                 => __( '%vPlease choose fewer than %max to continue&hellip;', 'wc-mnm-price' ),
 
 		);
 
