@@ -145,36 +145,52 @@ class WC_MNM_Price {
 		<script>
 			jQuery( document ).ready( function( $ ) {
 
-				$( "#mnm_product_data input#_mnm_per_product_pricing" ).change( function() {
-					if( $( this ).prop( 'checked') === true ) {
-						$( "#mnm_product_data ._mnm_validation_mode_field " ).show();
+				$( '#mnm_product_data input#_mnm_per_product_pricing' ).change( function() {
+
+                    var options      = $( '#mnm_product_data ._mnm_validation_mode_field' ).find( 'li' ).length;
+                    var $price_input = $( '#mnm_product_data ._mnm_validation_mode_field' ).find( 'input[value="price"]' );
+
+					if ( $( this ).prop( 'checked') ) {
+						$( '#mnm_product_data ._mnm_validation_mode_field' ).show();
+                        $price_input.closest( 'li' ).show();
 					} else {
-						$( "#mnm_product_data ._mnm_validation_mode_field " ).hide();
+                        // More than 2 options means another validation plugin is in play.
+                        if ( options > 2 ) {
+                            $price_input.closest( 'li' ).hide();
+                        } else {
+                            $( '#mnm_product_data ._mnm_validation_mode_field' ).hide();
+                        }
+
+                        // If price validation mode when leaving per-item pricing, revert to default validation.
+                        if ( $price_input.prop( 'checked' ) ) {
+                            $price_input.prop( 'checked', false );
+                            $( '#mnm_product_data ._mnm_validation_mode_field' ).find( 'input[value=""]' ).prop( 'checked', true );
+                        }
 					}
 
 				} );
 
-				$( "#mnm_product_data input#_mnm_per_product_pricing" ).change();
+				$( '#mnm_product_data input#_mnm_per_product_pricing' ).change();
 
 
-				$( "#mnm_product_data input.mnm_validation_mode" ).change( function() {
+				$( '#mnm_product_data input.mnm_validation_mode' ).change( function() {
 
 					var value = $( this ).val();
 
 					if( '' === value ) {
-						$( "#mnm_product_data .mnm_container_size_options" ).show();
-						$( "#mnm_product_data .show_if_validate_by_price" ).hide();
+						$( '#mnm_product_data .mnm_container_size_options' ).show();
+						$( '#mnm_product_data .show_if_validate_by_price' ).hide();
 					} else {
-						$( "#mnm_product_data .mnm_container_size_options" ).hide();
+						$( '#mnm_product_data .mnm_container_size_options' ).hide();
 						if( 'price' === value ) {
-							$( "#mnm_product_data .show_if_validate_by_price" ).show();
+							$( '#mnm_product_data .show_if_validate_by_price' ).show();
 						} else {
-							$( "#mnm_product_data .show_if_validate_by_price" ).hide();
+							$( '#mnm_product_data .show_if_validate_by_price' ).hide();
 						}
 					}
 				} );
 
-				$( "#mnm_product_data input.mnm_validation_mode:checked" ).change();
+				$( '#mnm_product_data input.mnm_validation_mode:checked' ).change();
 
 			} );
 
