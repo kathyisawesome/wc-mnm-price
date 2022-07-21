@@ -32,8 +32,8 @@ class WC_MNM_Price {
 	/**
 	 * constants
 	 */
-	CONST VERSION = '1.1.0';
-	CONST REQUIRED_WOO = '4.0.0';
+	const VERSION = '1.1.0';
+	const REQUIRED_WOO = '4.0.0';
 
 	/**
 	 * WC_MNM_Price Constructor
