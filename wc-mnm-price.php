@@ -11,7 +11,6 @@
  * Text Domain: wc-mnm-price
  * Domain Path: /languages
  * 
- * GitHub Plugin URI: kathyisawesome/wc-mnm-price
  * GitHub Plugin URI: https://github.com/kathyisawesome/wc-mnm-price
  * Release Asset: true
  *
