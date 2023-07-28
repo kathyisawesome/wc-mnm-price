@@ -15,7 +15,7 @@ Experimental mini-extension for [WooCommerce Mix and Match Products](https://woo
 ### Usage
 
 1. Go to the Mix and Match tab in the product data metabox (if creating a new product, select Mix and Match as the product type and then go to the Mix and Match tab)
-2. Change the "Validate by" option to "By weight" and then enter the minimum and maximum weights. (Weights are in the units set for your store in the WooCommerce settings)
+2. Change the "Validate by" option to "By price" and then enter the minimum and maximum weights. 
 
 ![Screenshot of Mix and Match data tab showing additional fields for "Validate by", "min weight", and "max weight"](https://user-images.githubusercontent.com/507025/99585859-23fb9e00-29a4-11eb-9fc0-d1151de28cdc.png)
 
